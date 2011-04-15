@@ -122,7 +122,7 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				//throw error
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/movies.json?apikey="+apikey+"&q="+URLEncoding.encode(term)+"&page_limit="+pageLimit+"&page="+page;
@@ -142,7 +142,7 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				//throw error
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/opening.json?apikey="+apikey+"&limit="+limit+"&country="+country;
@@ -163,7 +163,7 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				//throw error
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/upcoming.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
@@ -184,7 +184,7 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				//throw error
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/new_releases.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
@@ -205,7 +205,7 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				//throw error
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
@@ -217,7 +217,7 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				//throw error
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = url+"?apikey="+apikey;
@@ -230,7 +230,7 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				//throw error
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/movies/"+id+".json?apikey="+apikey;
@@ -243,7 +243,7 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				//throw error
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = url+"?apikey="+apikey;
@@ -256,7 +256,7 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				//throw error
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/movies/"+id+"/cast.json?apikey="+apikey;
@@ -269,7 +269,7 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				//throw error
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var type:String;
@@ -295,7 +295,7 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				//throw error
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var type:String;
@@ -540,5 +540,4 @@ class RottenTomatoesLoader extends URLLoader
 	public var url:String;
 	public var type:String;
 	public var httpStatus:int;
-	public var httpResponse:String;
 }
