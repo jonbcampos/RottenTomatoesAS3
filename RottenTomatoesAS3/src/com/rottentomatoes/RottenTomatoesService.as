@@ -41,6 +41,24 @@ package com.rottentomatoes
 	import flash.net.URLRequest;
 	
 	[Event(name="movieSearchResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="openingMoviesResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="upcomingMoviesResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="newReleaseDvdsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="movieInfoResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="movieCastResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="movieReviewsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	
+	[Event(name="activate", type="flash.events.Event")]
+	[Event(name="deactivate", type="flash.events.Event")]
+	[Event(name="complete", type="flash.events.Event")]
+	[Event(name="open", type="flash.events.Event")]
+	
+	[Event(name="httpResponseStatus", type="flash.events.HTTPStatusEvent")]
+	[Event(name="httpStatus", type="flash.events.HTTPStatusEvent")]
+	
+	[Event(name="fault", type="com.rottentomatoes.events.RottenTomatoesFaultEvent")]
+	
+	[Event(name="progress", type="flash.events.ProgressEvent")]
 
 	/**
 	 * 
