@@ -298,6 +298,9 @@ package com.rottentomatoes
 				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
+			
+			var limit:int = (pageLimit>50)?50:pageLimit;
+			
 			var type:String;
 			switch(reviewType)
 			{
@@ -311,7 +314,7 @@ package com.rottentomatoes
 					type = "top_critic";
 					break;
 			}
-			var url:String = ROTTEN_TOMATOES_BASE_URL+"/movies/"+id+"/reviews.json?apikey="+apikey+"&review_type="+type+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
+			var url:String = ROTTEN_TOMATOES_BASE_URL+"/movies/"+id+"/reviews.json?apikey="+apikey+"&review_type="+type+"&page_limit="+limit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = MOVIE_REVIEWS_TEMPLATE;
 			loader.load(new URLRequest(url));
