@@ -369,6 +369,11 @@ package com.rottentomatoes
 		{
 			var type:String;
 			var loader:RottenTomatoesLoader = event.target as RottenTomatoesLoader;
+			if(loader.data.toString().indexOf("Unrecognized domain")>-1)
+			{
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("Unknown",loader.data.toString(), "Service Request Error", loader.httpStatus)));
+				return;
+			}
 			var data:Object = JSON.decode(loader.data);
 			_releaseUrlLoader(loader.url);
 			//check error
