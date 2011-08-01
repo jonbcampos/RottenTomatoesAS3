@@ -24,7 +24,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<rottentomatoes:RottenTomatoesService id="service"
-											  apikey="eqpp2cjgerkbytvvjc5jkju2"/>
+											  apikey="z2eq9xmy8zpdezazprruedz2"/>
 	</fx:Declarations>
 	<s:List width="100%" height="100%" labelField="title" id="list" dataProvider="{new ArrayList(service.lastResult as Array)}"/>
 </s:View>

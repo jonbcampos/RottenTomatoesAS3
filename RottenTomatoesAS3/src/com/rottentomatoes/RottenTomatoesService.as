@@ -140,12 +140,16 @@ package com.rottentomatoes
 		 */		
 		public function getMoviesByTerm(term:String, pageLimit:int=30, page:int=1):void
 		{
+			//no api check
 			if(!apikey)
 			{
 				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
 					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
+			//page less than 1 check
+			if(page<1) page = 1;
+			//call service
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/movies.json?apikey="+apikey+"&q="+URLEncoding.encode(term)+"&page_limit="+pageLimit+"&page="+page;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = MOVIE_SEARCH_TEMPLATE;
@@ -191,6 +195,9 @@ package com.rottentomatoes
 					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
+			//page less than 1 check
+			if(page<1) page = 1;
+			//call service
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/upcoming.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = UPCOMING_MOVIES_TEMPLATE;
@@ -228,6 +235,9 @@ package com.rottentomatoes
 					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
+			//page less than 1 check
+			if(page<1) page = 1;
+			//call service
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/new_releases.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = NEW_RELEASE_DVDS_TEMPLATE;
@@ -242,6 +252,9 @@ package com.rottentomatoes
 					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
+			//page less than 1 check
+			if(page<1) page = 1;
+			//call service
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/current_releases.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = CURRENT_RELEASE_DVDS_TEMPLATE;
@@ -265,6 +278,9 @@ package com.rottentomatoes
 					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
+			//page less than 1 check
+			if(page<1) page = 1;
+			//call service
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = IN_THEATERS_TEMPLATE;
@@ -405,14 +421,6 @@ package com.rottentomatoes
 		{
 			if(hasEventListener(event.type))
 				dispatchEvent(event.clone());
-		}
-		
-		private function _onLoader_ResponseStatusHandler(event:HTTPStatusEvent):void
-		{
-			if(hasEventListener(event.type))
-				dispatchEvent(event.clone());
-			var loader:RottenTomatoesLoader = event.target as RottenTomatoesLoader;
-			loader.httpStatus = event.status;
 		}
 		
 		private function _onLoader_StatusHandler(event:HTTPStatusEvent):void
@@ -629,7 +637,6 @@ package com.rottentomatoes
 				loader.addEventListener(Event.COMPLETE, _onLoader_CompleteHandler);
 				loader.addEventListener(Event.DEACTIVATE, _onLoader_DeactivateHandler);
 				loader.addEventListener(Event.OPEN, _onLoader_OpenHandler);
-				loader.addEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, _onLoader_ResponseStatusHandler);
 				loader.addEventListener(HTTPStatusEvent.HTTP_STATUS, _onLoader_StatusHandler);
 				loader.addEventListener(IOErrorEvent.IO_ERROR, _onLoader_IOErrorHandler);
 				loader.addEventListener(ProgressEvent.PROGRESS, _onLoader_ProgressHandler);

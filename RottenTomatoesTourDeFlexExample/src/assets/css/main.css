@@ -1,0 +1,15 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/halo";
+
+s|Application
+{
+	skin-class: ClassReference("assets.skins.application.ApplicationSkin");
+}
+
+s|List.coverflow
+{
+	contentBackgroundAlpha: 0;
+	borderAlpha: 0.0; 
+	borderVisible: false;
+}

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:rottentomatoes="com.rottentomatoes.*"
+			   viewSourceURL="srcview/index.html">
+	<fx:Script>
+		<![CDATA[
+			import com.rottentomatoes.events.RottenTomatoesFaultEvent;
+			
+			import mx.controls.Alert;
+			
+			/**
+			 * Run our service on click.
+			 * You'll notice I use binding for the result, 
+			 * though you can listen to
+			 * specific result events for each service.
+			 * */
+			private function _runButton_clickHandler(event:MouseEvent):void
+			{
+				var serviceType:String = tabbar.selectedItem.label as String;
+				switch(serviceType)
+				{
+					case "Search":
+						service.getMoviesByTerm(titleInput.text, int(quantityInput.text));
+						break;
+					case "In Theaters":
+						service.getInTheaterMovies(int(quantityInput.text));
+						break;
+					case "Opening":
+						service.getOpeningMovies(int(quantityInput.text));
+						break;
+					case "Upcoming":
+						service.getUpcomingMovies(int(quantityInput.text));
+						break;
+					case "Top Rentals":
+						service.getTopRentals(int(quantityInput.text));
+						break;
+					case "Current Release DVD":
+						service.getCurrentReleaseDvd(int(quantityInput.text));
+						break;
+					case "New Release DVD":
+						service.getNewReleaseDvd(int(quantityInput.text));
+						break;
+					case "Upcoming DVD":
+						service.getUpcomingMovies(int(quantityInput.text));
+						break;
+				}
+			}
+			
+			/**
+			 * In case something goes wrong.
+			 * */
+			private function _service_faultHandler(event:RottenTomatoesFaultEvent):void
+			{
+				Alert.show(event.fault.faultDetail+"\n\nI've found that this only works with AIR apps (no cross-domain policy)", "Dang, something went wrong!");
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Get your own api key, incase I delete this one -->
+		<rottentomatoes:RottenTomatoesService id="service"
+											  apikey="z2eq9xmy8zpdezazprruedz2"
+											  fault="_service_faultHandler(event)"/>
+	</fx:Declarations>
+	<fx:Style source="assets/css/main.css"/>
+	<s:layout>
+		<s:VerticalLayout gap="0"
+						  paddingBottom="20" paddingLeft="20"
+						  paddingRight="20" paddingTop="20"/>
+	</s:layout>
+	
+	<!-- inputs -->
+	<s:Label text="Inputs" color="#FFFFFF"/>
+	<s:HGroup width="100%">
+		<s:TextInput prompt="Movie Title"
+					 id="titleInput" width="100%"
+					 visible="{Boolean(tabbar.selectedItem.label=='Search')}"
+					 includeInLayout="{Boolean(tabbar.selectedItem.label=='Search')}"/>
+		<s:TextInput prompt="Quantity" id="quantityInput" width="100%"
+					 restrict="0123456789"/>
+		<s:Button label="Do It!" id="runButton" click="_runButton_clickHandler(event)"/>
+	</s:HGroup>
+	
+	<!-- decorative -->
+	<s:Spacer height="20"/>
+	
+	<!-- service type -->
+	<s:Label text="Returns" color="#FFFFFF"/>
+	<s:TabBar width="100%" id="tabbar"
+			  requireSelection="true">
+		<s:dataProvider>
+			<s:ArrayList>
+				<fx:Object label="Search"/>
+				<fx:Object label="In Theaters"/>
+				<fx:Object label="Opening"/>
+				<fx:Object label="Upcoming"/>
+				<fx:Object label="Top Rentals"/>
+				<fx:Object label="Current Release DVD"/>
+				<fx:Object label="New Release DVD"/>
+				<fx:Object label="Upcoming DVD"/>
+			</s:ArrayList>
+		</s:dataProvider>
+	</s:TabBar>
+	
+	<!-- results -->
+	<s:DataGrid width="100%" height="100%" dataProvider="{new ArrayList(service.lastResult as Array)}"/>
+	
+</s:Application>

@@ -51,7 +51,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<rottentomatoes:RottenTomatoesService id="service" movieInfoResult="service_movieInfoResultHandler(event)"
-											  apikey="eqpp2cjgerkbytvvjc5jkju2"/>
+											  apikey="z2eq9xmy8zpdezazprruedz2"/>
 	</fx:Declarations>
 	
 	<s:layout>

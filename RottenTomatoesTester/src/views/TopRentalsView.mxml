@@ -12,7 +12,6 @@
 			protected function searchButton_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
-				service.apikey = "eqpp2cjgerkbytvvjc5jkju2";
 				service.getTopRentals(int(limitQty.text));
 			}
 		]]>
@@ -20,7 +19,8 @@
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<rottentomatoes:RottenTomatoesService id="service"/>
+		<rottentomatoes:RottenTomatoesService id="service"
+											  apikey="z2eq9xmy8zpdezazprruedz2"/>
 	</fx:Declarations>
 	<s:titleContent>
 		<s:TextInput prompt="Limit Quantity" id="limitQty" width="100%" restrict="0-9"/>
