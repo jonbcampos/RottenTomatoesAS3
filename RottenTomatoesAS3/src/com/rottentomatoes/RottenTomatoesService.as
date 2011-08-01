@@ -47,11 +47,21 @@ package com.rottentomatoes
 	[Event(name="movieInfoResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
 	[Event(name="movieCastResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
 	[Event(name="movieReviewsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="movieSimilarsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="movieClipsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="inTheatersReviewsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="currentReleaseDvdsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="topRentalsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
 	
 	[Event(name="activate", type="flash.events.Event")]
 	[Event(name="deactivate", type="flash.events.Event")]
 	[Event(name="complete", type="flash.events.Event")]
 	[Event(name="open", type="flash.events.Event")]
+	/**
+	 * Not really meant to be listened to, created for
+	 * binding mainly. 
+	 */	
+	[Event(name="lastResultChanged", type="flash.events.Event")]
 	
 	[Event(name="httpResponseStatus", type="flash.events.HTTPStatusEvent")]
 	[Event(name="httpStatus", type="flash.events.HTTPStatusEvent")]
@@ -88,9 +98,14 @@ package com.rottentomatoes
 		private static const OPENING_MOVIES_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/opening.json?limit={num_results}&country={country-code}";
 		private static const UPCOMING_MOVIES_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/upcoming.json?page_limit={results_per_page}&page={page_number}&country={country-code}";
 		private static const NEW_RELEASE_DVDS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/new_releases.json?page_limit={results_per_page}&page={page_number}&country={country-code}";
+		private static const CURRENT_RELEASE_DVDS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/current_releases.json?page_limit={results-per-page}&page={page-number}&country={country-code}";
 		private static const MOVIE_INFO_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/movies/{movie-id}.json";
 		private static const MOVIE_CAST_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/movies/{movie-id}/cast.json";
+		private static const MOVIE_CLIPS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/movies/{movie-id}/clips.json";
+		private static const MOVIE_SIMILARS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/movies/{movie-id}/similar.json";
 		private static const MOVIE_REVIEWS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/movies/{movie-id}/reviews.json?review_type={top_critic|all|dvd}&page_limit={results-per-page}&page={page-number}&country={country-code}";
+		private static const IN_THEATERS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit={results_per_page}&page={page_number}&country={country-code}";
+		private static const TOP_RENTALS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/top_rentals.json?limit={num-results}&country={country-code}";
 		
 		//---------------------------------------------------------------------
 		//
@@ -105,6 +120,11 @@ package com.rottentomatoes
 		//
 		//---------------------------------------------------------------------
 		public var apikey:String;
+		
+		private var _lastResult:Object;
+		[Bindable(event="lastResultChanged")]
+		public function get lastResult():Object { return _lastResult; }
+		
 		//---------------------------------------------------------------------
 		//
 		//  Public Methods
@@ -122,11 +142,13 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/movies.json?apikey="+apikey+"&q="+URLEncoding.encode(term)+"&page_limit="+pageLimit+"&page="+page;
-			var loader:URLLoader = _getUrlLoader(url);
+			var loader:RottenTomatoesLoader = _getUrlLoader(url);
+			loader.type = MOVIE_SEARCH_TEMPLATE;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -142,11 +164,13 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/opening.json?apikey="+apikey+"&limit="+limit+"&country="+country;
-			var loader:URLLoader = _getUrlLoader(url);
+			var loader:RottenTomatoesLoader = _getUrlLoader(url);
+			loader.type = OPENING_MOVIES_TEMPLATE;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -163,11 +187,27 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/upcoming.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
-			var loader:URLLoader = _getUrlLoader(url);
+			var loader:RottenTomatoesLoader = _getUrlLoader(url);
+			loader.type = UPCOMING_MOVIES_TEMPLATE;
+			loader.load(new URLRequest(url));
+		}
+		
+		public function getTopRentals(pageLimit:int=16, country:String="us"):void
+		{
+			if(!apikey)
+			{
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				return;
+			}
+			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/top_rentals.json?apikey="+apikey+"&page_limit="+pageLimit+"&country="+country;
+			var loader:RottenTomatoesLoader = _getUrlLoader(url);
+			loader.type = TOP_RENTALS_TEMPLATE;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -184,11 +224,27 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/new_releases.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
-			var loader:URLLoader = _getUrlLoader(url);
+			var loader:RottenTomatoesLoader = _getUrlLoader(url);
+			loader.type = NEW_RELEASE_DVDS_TEMPLATE;
+			loader.load(new URLRequest(url));
+		}
+		
+		public function getCurrentReleaseDvd(pageLimit:int=16, page:int=1, country:String="us"):void
+		{
+			if(!apikey)
+			{
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				return;
+			}
+			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/current_releases.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
+			var loader:RottenTomatoesLoader = _getUrlLoader(url);
+			loader.type = CURRENT_RELEASE_DVDS_TEMPLATE;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -205,11 +261,13 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
-			var loader:URLLoader = _getUrlLoader(url);
+			var loader:RottenTomatoesLoader = _getUrlLoader(url);
+			loader.type = IN_THEATERS_TEMPLATE;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -217,7 +275,8 @@ package com.rottentomatoes
 		{
 			if(!apikey)
 			{
-				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = url+"?apikey="+apikey;
@@ -228,22 +287,15 @@ package com.rottentomatoes
 		
 		public function getMovieById(id:String):void
 		{
-			if(!apikey)
-			{
-				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
-				return;
-			}
-			var url:String = ROTTEN_TOMATOES_BASE_URL+"/movies/"+id+".json?apikey="+apikey;
-			var loader:RottenTomatoesLoader = _getUrlLoader(url);
-			loader.type = MOVIE_INFO_TEMPLATE;
-			loader.load(new URLRequest(url));
+			getMovieByUrl(ROTTEN_TOMATOES_BASE_URL+"/movies/"+id+".json");
 		}
 		
 		public function getMovieCastByUrl(url:String):void
 		{
 			if(!apikey)
 			{
-				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var url:String = url+"?apikey="+apikey;
@@ -254,22 +306,53 @@ package com.rottentomatoes
 		
 		public function getMovieCastById(id:String):void
 		{
+			getMovieCastByUrl(ROTTEN_TOMATOES_BASE_URL+"/movies/"+id+"/cast.json");
+		}
+		
+		public function getMovieClipsByUrl(url:String):void
+		{
 			if(!apikey)
 			{
-				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
-			var url:String = ROTTEN_TOMATOES_BASE_URL+"/movies/"+id+"/cast.json?apikey="+apikey;
+			var url:String = url+"?apikey="+apikey;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
-			loader.type = MOVIE_CAST_TEMPLATE;
+			loader.type = MOVIE_CLIPS_TEMPLATE;
 			loader.load(new URLRequest(url));
+		}
+		
+		public function getMovieClipsById(id:String):void
+		{
+			getMovieClipsByUrl(ROTTEN_TOMATOES_BASE_URL+"/movies/"+id+"/clips.json");
+		}
+		
+		public function getMovieSimilarsByUrl(url:String):void
+		{
+			if(!apikey)
+			{
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				return;
+			}
+			var url:String = url+"?apikey="+apikey;
+			var loader:RottenTomatoesLoader = _getUrlLoader(url);
+			loader.type = MOVIE_SIMILARS_TEMPLATE;
+			loader.load(new URLRequest(url));
+		}
+		
+		public function getMovieSimilarsById(id:String):void
+		{
+			getMovieSimilarsByUrl(ROTTEN_TOMATOES_BASE_URL+"/movies/"+id+"/similar.json");
 		}
 		
 		public function getMovieReviewByUrl(url:String, reviewType:String="top_critic", pageLimit:int=20, page:int=1, country:String="us"):void
 		{
 			if(!apikey)
 			{
-				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
 			var type:String;
@@ -285,7 +368,7 @@ package com.rottentomatoes
 					type = "top_critic";
 					break;
 			}
-			var url:String = url+"?apikey="+apikey+"&review_type="+type+"&page_limit="+pageLimit+"$page="+page+"&country="+country;
+			var url:String = url+"?apikey="+apikey+"&review_type="+type+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = MOVIE_REVIEWS_TEMPLATE;
 			loader.load(new URLRequest(url));
@@ -293,31 +376,7 @@ package com.rottentomatoes
 		
 		public function getMovieReviewById(id:String, reviewType:String="top_critic", pageLimit:int=20, page:int=1, country:String="us"):void
 		{
-			if(!apikey)
-			{
-				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
-				return;
-			}
-			
-			var limit:int = (pageLimit>50)?50:pageLimit;
-			
-			var type:String;
-			switch(reviewType)
-			{
-				case "all":
-					type = "all";
-					break;
-				case "dvd":
-					type = "dvd";
-					break;
-				default:
-					type = "top_critic";
-					break;
-			}
-			var url:String = ROTTEN_TOMATOES_BASE_URL+"/movies/"+id+"/reviews.json?apikey="+apikey+"&review_type="+type+"&page_limit="+limit+"&page="+page+"&country="+country;
-			var loader:RottenTomatoesLoader = _getUrlLoader(url);
-			loader.type = MOVIE_REVIEWS_TEMPLATE;
-			loader.load(new URLRequest(url));
+			getMovieReviewByUrl(ROTTEN_TOMATOES_BASE_URL+"/movies/"+id+"/reviews.json", reviewType, pageLimit, page, country);
 		}
 		//---------------------------------------------------------------------
 		//
@@ -326,34 +385,40 @@ package com.rottentomatoes
 		//---------------------------------------------------------------------
 		private function _onLoader_ActivateHandler(event:Event):void
 		{
-			dispatchEvent(event.clone());
+			if(hasEventListener(event.type))
+				dispatchEvent(event.clone());
 		}
 		
 		private function _onLoader_DeactivateHandler(event:Event):void
 		{
-			dispatchEvent(event.clone());
+			if(hasEventListener(event.type))
+				dispatchEvent(event.clone());
 		}
 		
 		private function _onLoader_OpenHandler(event:Event):void
 		{
-			dispatchEvent(event.clone());
+			if(hasEventListener(event.type))
+				dispatchEvent(event.clone());
 		}
 		
 		private function _onLoader_ProgressHandler(event:ProgressEvent):void
 		{
-			dispatchEvent(event.clone());
+			if(hasEventListener(event.type))
+				dispatchEvent(event.clone());
 		}
 		
 		private function _onLoader_ResponseStatusHandler(event:HTTPStatusEvent):void
 		{
-			dispatchEvent(event.clone());
+			if(hasEventListener(event.type))
+				dispatchEvent(event.clone());
 			var loader:RottenTomatoesLoader = event.target as RottenTomatoesLoader;
 			loader.httpStatus = event.status;
 		}
 		
 		private function _onLoader_StatusHandler(event:HTTPStatusEvent):void
 		{
-			dispatchEvent(event.clone());
+			if(hasEventListener(event.type))
+				dispatchEvent(event.clone());
 			var loader:RottenTomatoesLoader = event.target as RottenTomatoesLoader;
 			loader.httpStatus = event.status;
 		}
@@ -362,7 +427,9 @@ package com.rottentomatoes
 		{
 			var loader:RottenTomatoesLoader = event.target as RottenTomatoesLoader;
 			_releaseUrlLoader(loader.url);
-			dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault(event.errorID.toFixed(0),event.type, event.text, loader.httpStatus)));
+			
+			if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault(event.errorID.toFixed(0),event.type, event.text, loader.httpStatus)));
 		}
 		
 		private function _onLoader_CompleteHandler(event:Event):void
@@ -402,6 +469,17 @@ package com.rottentomatoes
 					while(++i<n)
 						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
 					break;
+				case IN_THEATERS_TEMPLATE:
+					type = RottenTomatoesResultEvent.IN_THEATERS_RESULT;
+					i = -1;
+					titles = data.movies as Array;
+					n = titles.length;
+					results = [];
+					total = n;
+					link = data.links.self;
+					while(++i<n)
+						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
+					break;
 				case OPENING_MOVIES_TEMPLATE:
 					type = RottenTomatoesResultEvent.OPENING_MOVIES_RESULT;
 					i = -1;
@@ -426,6 +504,28 @@ package com.rottentomatoes
 					break;
 				case NEW_RELEASE_DVDS_TEMPLATE:
 					type = RottenTomatoesResultEvent.NEW_RELEASE_DVDS_MOVIES_RESULT;
+					i = -1;
+					titles = data.movies as Array;
+					n = titles.length;
+					results = [];
+					total = data.total;
+					link = data.links.self;
+					while(++i<n)
+						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
+					break;
+				case TOP_RENTALS_TEMPLATE:
+					type = RottenTomatoesResultEvent.TOP_RENTALS_RESULT;
+					i = -1;
+					titles = data.movies as Array;
+					n = titles.length;
+					results = [];
+					total = data.total;
+					link = data.links.self;
+					while(++i<n)
+						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
+					break;
+				case CURRENT_RELEASE_DVDS_TEMPLATE:
+					type = RottenTomatoesResultEvent.CURRENT_RELEASE_DVDS_MOVIES_RESULT;
 					i = -1;
 					titles = data.movies as Array;
 					n = titles.length;
@@ -461,6 +561,22 @@ package com.rottentomatoes
 							link = loader.url;
 							results = ConvertUtil.convertArrayToCast(data.cast as Array);
 							break;
+						case MOVIE_SIMILARS_TEMPLATE:
+							type = RottenTomatoesResultEvent.MOVIE_SIMILARS_RESULT;
+							link = loader.url;
+							i = -1;
+							titles = data.movies as Array;
+							n = titles.length;
+							results = [];
+							total = n;
+							while(++i<n)
+								results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
+							break;
+						case MOVIE_CLIPS_TEMPLATE:
+							type = RottenTomatoesResultEvent.MOVIE_CLIPS_RESULT;
+							link = loader.url;
+							results = ConvertUtil.convertArrayToClips(data.clips as Array);
+							break;
 						default:
 							//unknown response, throw error
 							dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("Unknown","Unknown Error", "Unknown Response", loader.httpStatus)));
@@ -469,14 +585,28 @@ package com.rottentomatoes
 					}
 					break;
 			}
-			dispatchEvent(new RottenTomatoesResultEvent(type, results, link, total));
+			//for peeps using binding,
+			//I included this to bind to
+			//'lastResult' like an httpservice
+			if(_lastResult != results)
+			{
+				_lastResult = results;
+				dispatchEvent(new Event("lastResultChanged"));
+			}
+			//dispatch result
+			//only dispatch if we
+			//are listening for it
+			if(hasEventListener(type))
+				dispatchEvent(new RottenTomatoesResultEvent(type, results, link, total));
 		}
 		
 		private function _onLoader_SecurityHandler(event:SecurityErrorEvent):void
 		{
 			var loader:RottenTomatoesLoader = event.target as RottenTomatoesLoader;
 			_releaseUrlLoader(loader.url);
-			dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault(event.errorID.toFixed(0),event.type, event.text, loader.httpStatus)));
+			
+			if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault(event.errorID.toFixed(0),event.type, event.text, loader.httpStatus)));
 		}
 		
 		//---------------------------------------------------------------------

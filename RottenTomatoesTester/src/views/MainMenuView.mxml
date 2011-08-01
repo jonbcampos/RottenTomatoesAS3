@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="HomeView">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			public var listData:ArrayCollection = new ArrayCollection(
+				[{title:"Movie Search", view:MovieSearchView},
+					{title:"In Theater", view:InTheaterMoviesView},
+					{title:"Opening Movies",view:OpeningMoviesView},
+					{title:"Upcoming Movies", view:UpcomingMoviesView},
+					{title:"Top Rentals", view:TopRentalsView},
+					{title:"Current Rentals", view:CurrentReleaseDvdsView},
+					{title:"New Release DVDs", view:NewReleaseDvdsView},
+					{title:"Upcoming DVDs", view:UpcomingReleaseDvdsView}]
+			);
+			
+			private function _onMenu_changeHandler(event:IndexChangeEvent):void
+			{
+				var item:Object = menu.selectedItem;
+				navigator.pushView(item.view);
+			}
+			
+		]]>
+	</fx:Script>
+	<s:List width="100%" height="100%" dataProvider="{listData}"
+			id="menu"
+			labelField="title" change="_onMenu_changeHandler(event)"/>
+</s:View>

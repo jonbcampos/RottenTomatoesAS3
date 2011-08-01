@@ -34,9 +34,14 @@ package com.rottentomatoes.events
 		public static const OPENING_MOVIES_RESULT:String = "openingMoviesResult";
 		public static const UPCOMING_MOVIES_RESULT:String = "upcomingMoviesResult";
 		public static const NEW_RELEASE_DVDS_MOVIES_RESULT:String = "newReleaseDvdsResult";
+		public static const CURRENT_RELEASE_DVDS_MOVIES_RESULT:String = "currentReleaseDvdsResult";
 		public static const MOVIE_INFO_RESULT:String = "movieInfoResult";
 		public static const MOVIE_CAST_RESULT:String = "movieCastResult";
 		public static const MOVIE_REVIEWS_RESULT:String = "movieReviewsResult";
+		public static const MOVIE_SIMILARS_RESULT:String = "movieSimilarsResult";
+		public static const MOVIE_CLIPS_RESULT:String = "movieClipsResult";
+		public static const IN_THEATERS_RESULT:String = "inTheatersReviewsResult";
+		public static const TOP_RENTALS_RESULT:String = "topRentalsResult";
 		
 		private var _result:Object;
 		/**

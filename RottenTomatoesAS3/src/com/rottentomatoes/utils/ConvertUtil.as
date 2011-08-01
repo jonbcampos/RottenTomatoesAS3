@@ -1,6 +1,7 @@
 package com.rottentomatoes.utils
 {
 	import com.rottentomatoes.vos.CastVO;
+	import com.rottentomatoes.vos.ClipVO;
 	import com.rottentomatoes.vos.DirectorVO;
 	import com.rottentomatoes.vos.MovieVO;
 	import com.rottentomatoes.vos.ReviewVO;
@@ -28,24 +29,44 @@ package com.rottentomatoes.utils
 			movie.abridgedDirectors = convertArrayToAbridgedDirectors(value.abridged_directors as Array);
 			movie.genres = value.genres as Array;
 			movie.id = value.id;
-			movie.alternateLink = value.links.alternate;
-			movie.castLink = value.links.cast;
-			movie.reviewsLink = value.links.reviews;
-			movie.selfLink = value.links.self;
-			movie.detailedPoster = value.posters.detailed;
-			movie.originalPoster = value.posters.original;
-			movie.profilePoster = value.posters.profile;
-			movie.thumbnailPoster = value.posters.thumbnail;
-			movie.audienceScore = value.ratings.audience_score;
-			movie.criticsScore = value.ratings.critics_score;
+			if(value.links)
+			{
+				movie.alternateLink = value.links.alternate;
+				movie.castLink = value.links.cast;
+				movie.reviewsLink = value.links.reviews;
+				movie.selfLink = value.links.self;
+				movie.clipsLink = value.links.clips;
+				movie.similarLink = value.links.similar;
+			}
+			if(value.posters)
+			{
+				movie.detailedPoster = value.posters.detailed;
+				movie.originalPoster = value.posters.original;
+				movie.profilePoster = value.posters.profile;
+				movie.thumbnailPoster = value.posters.thumbnail;
+			}
+			if(value.ratings)
+			{
+				movie.audienceScore = value.ratings.audience_score;
+				movie.criticsScore = value.ratings.critics_score;
+				movie.audienceRating = value.ratings.audience_rating;
+				movie.criticsRating = value.ratings.critics_rating;
+			}
 			if(value.release_dates.dvd)
 				movie.dvdReleaseDate = new Date((value.release_dates.dvd as String).replace(/\-/gi,"/"));
 			if(value.release_dates.theater)
 				movie.theaterReleaseDate = new Date((value.release_dates.theater as String).replace(/\-/gi,"/"));
 			movie.runtime = value.runtime;
 			movie.synopsis = value.synopsis;
+			movie.mpaaRating = value.mpaa_rating;
 			movie.title = value.title;
 			movie.year = value.year;
+			movie.studio = value.studio;
+			movie.criticsConsensus = value.critics_consensus;
+			if(value.alternate_ids)
+			{
+				movie.imdbId = value.alternate_ids.imdb;
+			}
 			return movie;
 		}
 		
@@ -90,6 +111,31 @@ package com.rottentomatoes.utils
 				results.push( director );
 			}
 			return results;
+		}
+		
+		public static function convertArrayToClips(value:Array):Array
+		{
+			if(!value)
+				return null;
+			var i:int = -1;
+			var n:int = value.length;
+			var results:Array = [];
+			while(++i<n)
+				results.push( convertObjectToClip(value[i]) );
+			return results;
+		}
+		
+		private static function convertObjectToClip(value:Object):ClipVO
+		{
+			var clip:ClipVO = new ClipVO();
+			clip.duration = int(value.duration);
+			if(value.links)
+			{
+				clip.alternativeLink = value.links.alternate;
+			}
+			clip.thumbnail = value.thumbnail;
+			clip.title = value.title;
+			return clip;
 		}
 	}
 }

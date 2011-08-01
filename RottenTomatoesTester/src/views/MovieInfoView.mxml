@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		title="Movie Info" xmlns:services="com.rottentomatoes.services.*" 
+		xmlns:rottentomatoes="com.rottentomatoes.*"
+		creationComplete="view1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.rottentomatoes.events.RottenTomatoesResultEvent;
+			import com.rottentomatoes.vos.MovieVO;
+			
+			import mx.events.FlexEvent;
+			
+			private var _movie:MovieVO;
+			
+			protected function view1_creationCompleteHandler(event:FlexEvent):void
+			{
+				var m:MovieVO = data as MovieVO;
+				service.getMovieById(m.id);
+			}
+			
+			protected function service_movieInfoResultHandler(event:RottenTomatoesResultEvent):void
+			{
+				_movie = event.result as MovieVO;
+				title = _movie.title;
+			}
+			
+			protected function castButton_clickHandler(event:MouseEvent):void
+			{
+				navigator.pushView(MovieCastView, _movie);
+			}
+			
+			protected function reviewsButton_clickHandler(event:MouseEvent):void
+			{
+				navigator.pushView(MovieReviewView, _movie);
+			}
+			
+			protected function clipsButton_clickHandler(event:MouseEvent):void
+			{
+				navigator.pushView(MovieClipsView, _movie);
+			}
+			
+			protected function similarsButton_clickHandler(event:MouseEvent):void
+			{
+				navigator.pushView(SimilarsView, _movie);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<rottentomatoes:RottenTomatoesService id="service" movieInfoResult="service_movieInfoResultHandler(event)"
+											  apikey="eqpp2cjgerkbytvvjc5jkju2"/>
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<s:Button label="Similars" id="similarsButton" click="similarsButton_clickHandler(event)"/>
+	<s:Button label="Clips" id="clipsButton" click="clipsButton_clickHandler(event)"/>
+	<s:Button label="Reviews" id="reviewsButton" click="reviewsButton_clickHandler(event)"/>
+	<s:Button label="Cast" id="castButton" click="castButton_clickHandler(event)"/>
+</s:View>
