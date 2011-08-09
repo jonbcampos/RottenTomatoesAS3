@@ -7,6 +7,8 @@
 	<fx:Script>
 		<![CDATA[
 			import com.rottentomatoes.events.RottenTomatoesFaultEvent;
+			import com.rottentomatoes.vos.CastVO;
+			import com.rottentomatoes.vos.MovieVO;
 			
 			import mx.controls.Alert;
 			
@@ -53,7 +55,34 @@
 			 * */
 			private function _service_faultHandler(event:RottenTomatoesFaultEvent):void
 			{
-				Alert.show(event.fault.faultDetail+"\n\nI've found that this only works with AIR apps (no cross-domain policy)", "Dang, something went wrong!");
+				Alert.show(event.fault.faultDetail, "Dang, something went wrong!");
+			}
+			
+			//-------------------------
+			// Label Functions
+			//   Not important,
+			//   just make things pretty
+			//-------------------------
+			public function createCastString(data:Object, column:GridColumn):String
+			{
+				var s:String = "";
+				if(data is MovieVO)
+				{
+					var movie:MovieVO = data as MovieVO;
+					if(movie.abridgedCast && movie.abridgedCast.length>0)
+					{
+						var i:int = -1;
+						var n:int = movie.abridgedCast.length;
+						while(++i<n)
+						{
+							if(movie.abridgedCast[i] is CastVO)
+								s += (movie.abridgedCast[i] as CastVO).name;
+							if(i<n-1)
+								s += ", ";
+						}
+					}
+				}
+				return s;
 			}
 			
 		]]>
@@ -77,10 +106,11 @@
 	<s:HGroup width="100%">
 		<s:TextInput prompt="Movie Title"
 					 id="titleInput" width="100%"
+					 text="Superman"
 					 visible="{Boolean(tabbar.selectedItem.label=='Search')}"
 					 includeInLayout="{Boolean(tabbar.selectedItem.label=='Search')}"/>
 		<s:TextInput prompt="Quantity" id="quantityInput" width="100%"
-					 restrict="0123456789"/>
+					 restrict="0123456789" text="15"/>
 		<s:Button label="Do It!" id="runButton" click="_runButton_clickHandler(event)"/>
 	</s:HGroup>
 	
@@ -106,6 +136,30 @@
 	</s:TabBar>
 	
 	<!-- results -->
-	<s:DataGrid width="100%" height="100%" dataProvider="{new ArrayList(service.lastResult as Array)}"/>
+	<s:DataGrid width="100%" height="100%" 
+				dataProvider="{new ArrayList(service.lastResult as Array)}"
+				variableRowHeight="true">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn headerText="Box Art" width="61">
+					<s:itemRenderer>
+						<fx:Component>
+							<s:GridItemRenderer>
+								<s:Image source="{data.thumbnailPoster}"
+										 width="61" height="91"/>
+							</s:GridItemRenderer>
+						</fx:Component>
+					</s:itemRenderer>
+				</s:GridColumn>
+				<s:GridColumn headerText="Title" dataField="title" width="150"/>
+				<s:GridColumn headerText="Year" dataField="year" width="50"/>
+				<s:GridColumn headerText="Audience Rating" dataField="audienceRating" width="120"/>
+				<s:GridColumn headerText="Audience Score" dataField="audienceScore" width="120"/>
+				<s:GridColumn headerText="Critics Rating" dataField="criticsRating" width="100"/>
+				<s:GridColumn headerText="Critics Score" dataField="criticsScore" width="100"/>
+				<s:GridColumn headerText="Cast" labelFunction="{createCastString}"/>
+			</s:ArrayList>
+		</s:columns>
+	</s:DataGrid>
 	
 </s:Application>
