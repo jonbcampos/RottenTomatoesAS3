@@ -40,6 +40,7 @@ package com.rottentomatoes
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 	
+	[Event(name="result", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
 	[Event(name="movieSearchResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
 	[Event(name="openingMoviesResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
 	[Event(name="upcomingMoviesResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
@@ -635,6 +636,11 @@ package com.rottentomatoes
 			//are listening for it
 			if(hasEventListener(type))
 				dispatchEvent(new RottenTomatoesResultEvent(type, results, link, total));
+			//dispatch the generic "result"
+			//event if someone doesn't care
+			//for the exact service type
+			if(hasEventListener(RottenTomatoesResultEvent.RESULT))
+				dispatchEvent(new RottenTomatoesResultEvent(RottenTomatoesResultEvent.RESULT, results, link, total));
 		}
 		
 		private function _onLoader_SecurityHandler(event:SecurityErrorEvent):void

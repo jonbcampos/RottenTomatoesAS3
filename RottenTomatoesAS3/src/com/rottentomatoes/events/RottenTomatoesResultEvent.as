@@ -30,6 +30,8 @@ package com.rottentomatoes.events
 	 */
 	public class RottenTomatoesResultEvent extends Event
 	{
+		public static const RESULT:String = "result";
+		
 		public static const MOVIE_SEARCH_RESULT:String = "movieSearchResult";
 		public static const OPENING_MOVIES_RESULT:String = "openingMoviesResult";
 		public static const UPCOMING_MOVIES_RESULT:String = "upcomingMoviesResult";
