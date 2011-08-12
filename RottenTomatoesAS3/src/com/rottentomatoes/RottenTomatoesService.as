@@ -97,6 +97,7 @@ package com.rottentomatoes
 		private static const MOVIE_SEARCH_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q={search-term}&page_limit={results-per-page}&page={page-number}";
 		private static const OPENING_MOVIES_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/opening.json?limit={num_results}&country={country-code}";
 		private static const UPCOMING_MOVIES_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/upcoming.json?page_limit={results_per_page}&page={page_number}&country={country-code}";
+		private static const UPCOMING_DVDS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/upcoming.json?page_limit={results-per-page}&page={page-number}&country={country-code}";
 		private static const NEW_RELEASE_DVDS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/new_releases.json?page_limit={results_per_page}&page={page_number}&country={country-code}";
 		private static const CURRENT_RELEASE_DVDS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/current_releases.json?page_limit={results-per-page}&page={page-number}&country={country-code}";
 		private static const MOVIE_INFO_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/movies/{movie-id}.json";
@@ -284,6 +285,23 @@ package com.rottentomatoes
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = IN_THEATERS_TEMPLATE;
+			loader.load(new URLRequest(url));
+		}
+		
+		public function getUpcomingDvd(pageLimit:int=16, page:int=1, country:String="us"):void
+		{
+			if(!apikey)
+			{
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				return;
+			}
+			//page less than 1 check
+			if(page<1) page = 1;
+			//call service
+			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/upcoming.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
+			var loader:RottenTomatoesLoader = _getUrlLoader(url);
+			loader.type = UPCOMING_DVDS_TEMPLATE;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -534,6 +552,17 @@ package com.rottentomatoes
 					break;
 				case CURRENT_RELEASE_DVDS_TEMPLATE:
 					type = RottenTomatoesResultEvent.CURRENT_RELEASE_DVDS_MOVIES_RESULT;
+					i = -1;
+					titles = data.movies as Array;
+					n = titles.length;
+					results = [];
+					total = data.total;
+					link = data.links.self;
+					while(++i<n)
+						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
+					break;
+				case UPCOMING_DVDS_TEMPLATE:
+					type = RottenTomatoesResultEvent.UPCOMING_DVDS_RESULT;
 					i = -1;
 					titles = data.movies as Array;
 					n = titles.length;

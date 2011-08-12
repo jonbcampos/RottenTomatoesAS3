@@ -10,7 +10,7 @@
 			protected function searchButton_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
-				service.getNewReleaseDvd(int(limitQty.text));
+				service.getUpcomingDvd(int(limitQty.text));
 			}
 		]]>
 	</fx:Script>

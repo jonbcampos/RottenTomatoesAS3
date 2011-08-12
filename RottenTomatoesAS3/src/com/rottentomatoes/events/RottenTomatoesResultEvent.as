@@ -33,6 +33,7 @@ package com.rottentomatoes.events
 		public static const MOVIE_SEARCH_RESULT:String = "movieSearchResult";
 		public static const OPENING_MOVIES_RESULT:String = "openingMoviesResult";
 		public static const UPCOMING_MOVIES_RESULT:String = "upcomingMoviesResult";
+		public static const UPCOMING_DVDS_RESULT:String = "upcomingDvdsResult";
 		public static const NEW_RELEASE_DVDS_MOVIES_RESULT:String = "newReleaseDvdsResult";
 		public static const CURRENT_RELEASE_DVDS_MOVIES_RESULT:String = "currentReleaseDvdsResult";
 		public static const MOVIE_INFO_RESULT:String = "movieInfoResult";
