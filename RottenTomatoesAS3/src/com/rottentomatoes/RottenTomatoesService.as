@@ -22,6 +22,7 @@
 package com.rottentomatoes
 {
 	import com.adobe.serialization.json.JSON;
+	import com.adobe.utils.StringUtil;
 	import com.rottentomatoes.events.RottenTomatoesFaultEvent;
 	import com.rottentomatoes.events.RottenTomatoesResultEvent;
 	import com.rottentomatoes.utils.ConvertUtil;
@@ -160,6 +161,17 @@ package com.rottentomatoes
 			}
 			//page less than 1 check
 			if(page<1) page = 1;
+			//pageLimit minimum check
+			if(pageLimit<1) pageLimit = 1;
+			//term check
+			if(!term)
+			{
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("Service Fault", "Term Missing","You need to specify a term to search with this call.",0)));
+				return;
+			} else {
+				term = StringUtil.trim(term);
+			}
 			//call service
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/movies.json?apikey="+apikey+"&q="+URLEncoding.encode(term)+"&page_limit="+pageLimit+"&page="+page;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
@@ -170,12 +182,12 @@ package com.rottentomatoes
 		/**
 		 * Retrieves current opening movies.
 		 * 
-		 * @param limit Limits the number of opening movies returned.
+		 * @param pageLimit Limits the number of opening movies returned.
 		 * @param country Provides localized data for the selected country (ISO 3166-1 alpha-2) if available. Otherwise, returns US data.
 		 * 
 		 * @see http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 		 */		
-		public function getOpeningMovies(limit:int=16, country:String="us"):void
+		public function getOpeningMovies(pageLimit:int=16, country:String="us"):void
 		{
 			if(!apikey)
 			{
@@ -183,7 +195,12 @@ package com.rottentomatoes
 					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
-			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/opening.json?apikey="+apikey+"&limit="+limit+"&country="+country;
+			//pageLimit minimum check
+			if(pageLimit<1) pageLimit = 1;
+			//country check
+			if(!country) country = "us";
+			//service call
+			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/opening.json?apikey="+apikey+"&limit="+pageLimit+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = OPENING_MOVIES_TEMPLATE;
 			loader.load(new URLRequest(url));
@@ -208,6 +225,10 @@ package com.rottentomatoes
 			}
 			//page less than 1 check
 			if(page<1) page = 1;
+			//pageLimit minimum check
+			if(pageLimit<1) pageLimit = 1;
+			//country check
+			if(!country) country = "us";
 			//call service
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/upcoming.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
@@ -234,6 +255,10 @@ package com.rottentomatoes
 			}
 			//page less than 1 check
 			if(page<1) page = 1;
+			//pageLimit minimum check
+			if(pageLimit<1) pageLimit = 1;
+			//country check
+			if(!country) country = "us";
 			//call service
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
@@ -251,7 +276,10 @@ package com.rottentomatoes
 			}
 			//page less than 1 check
 			if(page<1) page = 1;
-			//page limit check
+			//pageLimit minimum check
+			if(pageLimit<1) pageLimit = 1;
+			//country check
+			if(!country) country = "us";
 			//call service
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/box_office.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
@@ -267,6 +295,11 @@ package com.rottentomatoes
 					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
 				return;
 			}
+			//pageLimit minimum check
+			if(pageLimit<1) pageLimit = 1;
+			//country check
+			if(!country) country = "us";
+			//service call
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/top_rentals.json?apikey="+apikey+"&page_limit="+pageLimit+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = TOP_RENTALS_TEMPLATE;
@@ -292,7 +325,11 @@ package com.rottentomatoes
 			}
 			//page less than 1 check
 			if(page<1) page = 1;
-			//call service
+			//pageLimit minimum check
+			if(pageLimit<1) pageLimit = 1;
+			//country check
+			if(!country) country = "us";
+			//service call
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/new_releases.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = NEW_RELEASE_DVDS_TEMPLATE;
@@ -309,7 +346,11 @@ package com.rottentomatoes
 			}
 			//page less than 1 check
 			if(page<1) page = 1;
-			//call service
+			//pageLimit minimum check
+			if(pageLimit<1) pageLimit = 1;
+			//country check
+			if(!country) country = "us";
+			//service call
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/current_releases.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = CURRENT_RELEASE_DVDS_TEMPLATE;
@@ -326,7 +367,11 @@ package com.rottentomatoes
 			}
 			//page less than 1 check
 			if(page<1) page = 1;
-			//call service
+			//pageLimit minimum check
+			if(pageLimit<1) pageLimit = 1;
+			//country check
+			if(!country) country = "us";
+			//service call
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/upcoming.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = UPCOMING_DVDS_TEMPLATE;
