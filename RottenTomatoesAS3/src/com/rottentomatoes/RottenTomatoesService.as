@@ -21,6 +21,7 @@
  * */
 package com.rottentomatoes
 {
+	import com.adobe.serialization.json.JSON;
 	import com.rottentomatoes.events.RottenTomatoesFaultEvent;
 	import com.rottentomatoes.events.RottenTomatoesResultEvent;
 	import com.rottentomatoes.utils.ConvertUtil;
@@ -494,7 +495,8 @@ package com.rottentomatoes
 				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("Unknown",loader.data.toString(), "Service Request Error", loader.httpStatus)));
 				return;
 			}
-			var data:Object = JSON.parse(loader.data);
+			//var data:Object = JSON.parse(loader.data);
+			var data:Object = JSON.decode(loader.data);
 			_releaseUrlLoader(loader.url);
 			//check error
 			if(data.error)
