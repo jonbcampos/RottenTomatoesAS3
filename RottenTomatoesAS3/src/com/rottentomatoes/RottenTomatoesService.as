@@ -21,8 +21,6 @@
  * */
 package com.rottentomatoes
 {
-	import com.adobe.serialization.json.JSON;
-	import com.adobe.serialization.json.JSONDecoder;
 	import com.rottentomatoes.events.RottenTomatoesFaultEvent;
 	import com.rottentomatoes.events.RottenTomatoesResultEvent;
 	import com.rottentomatoes.utils.ConvertUtil;
@@ -41,18 +39,24 @@ package com.rottentomatoes
 	import flash.net.URLRequest;
 	
 	[Event(name="result", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	
 	[Event(name="movieSearchResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	
 	[Event(name="openingMoviesResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
 	[Event(name="upcomingMoviesResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="inTheatersResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="boxOfficeResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	
+	[Event(name="upcomingDvdsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
 	[Event(name="newReleaseDvdsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="currentReleaseDvdsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	[Event(name="topRentalsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
+	
 	[Event(name="movieInfoResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
 	[Event(name="movieCastResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
 	[Event(name="movieReviewsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
 	[Event(name="movieSimilarsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
 	[Event(name="movieClipsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
-	[Event(name="inTheatersReviewsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
-	[Event(name="currentReleaseDvdsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
-	[Event(name="topRentalsResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
 	
 	[Event(name="activate", type="flash.events.Event")]
 	[Event(name="deactivate", type="flash.events.Event")]
@@ -96,18 +100,22 @@ package com.rottentomatoes
 		public static const ROTTEN_TOMATOES_BASE_URL:String = "http://api.rottentomatoes.com/api/public/v1.0";
 		
 		private static const MOVIE_SEARCH_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q={search-term}&page_limit={results-per-page}&page={page-number}";
+		
 		private static const OPENING_MOVIES_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/opening.json?limit={num_results}&country={country-code}";
 		private static const UPCOMING_MOVIES_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/upcoming.json?page_limit={results_per_page}&page={page_number}&country={country-code}";
+		private static const IN_THEATERS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit={results_per_page}&page={page_number}&country={country-code}";
+		private static const BOX_OFFICE_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit={num-results}&country={country-code}";
+		
 		private static const UPCOMING_DVDS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/upcoming.json?page_limit={results-per-page}&page={page-number}&country={country-code}";
-		private static const NEW_RELEASE_DVDS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/new_releases.json?page_limit={results_per_page}&page={page_number}&country={country-code}";
+		private static const NEW_RELEASE_DVDS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/new_releases.json?page_limit={results-per-page}&page={page-number}&country={country-code}";
 		private static const CURRENT_RELEASE_DVDS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/current_releases.json?page_limit={results-per-page}&page={page-number}&country={country-code}";
+		private static const TOP_RENTALS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/top_rentals.json?limit={num-results}&country={country-code}";
+		
 		private static const MOVIE_INFO_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/movies/{movie-id}.json";
 		private static const MOVIE_CAST_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/movies/{movie-id}/cast.json";
 		private static const MOVIE_CLIPS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/movies/{movie-id}/clips.json";
 		private static const MOVIE_SIMILARS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/movies/{movie-id}/similar.json";
 		private static const MOVIE_REVIEWS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/movies/{movie-id}/reviews.json?review_type={top_critic|all|dvd}&page_limit={results-per-page}&page={page-number}&country={country-code}";
-		private static const IN_THEATERS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit={results_per_page}&page={page_number}&country={country-code}";
-		private static const TOP_RENTALS_TEMPLATE:String = "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/top_rentals.json?limit={num-results}&country={country-code}";
 		
 		//---------------------------------------------------------------------
 		//
@@ -206,6 +214,50 @@ package com.rottentomatoes
 			loader.load(new URLRequest(url));
 		}
 		
+		/**
+		 * Retrieves movies currently in theaters.
+		 *  
+		 * @param pageLimit The amount of movies in theaters to show per page.
+		 * @param page The selected page of in theaters movies.
+		 * @param country Provides localized data for the selected country (ISO 3166-1 alpha-2) if available. Otherwise, returns US data.
+		 * 
+		 * @see http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+		 */		
+		public function getInTheaterMovies(pageLimit:int=16, page:int=1, country:String="us"):void
+		{
+			if(!apikey)
+			{
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				return;
+			}
+			//page less than 1 check
+			if(page<1) page = 1;
+			//call service
+			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
+			var loader:RottenTomatoesLoader = _getUrlLoader(url);
+			loader.type = IN_THEATERS_TEMPLATE;
+			loader.load(new URLRequest(url));
+		}
+		
+		public function getBoxOfficeMovies(pageLimit:int=16, page:int=1, country:String="us"):void
+		{
+			if(!apikey)
+			{
+				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
+					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
+				return;
+			}
+			//page less than 1 check
+			if(page<1) page = 1;
+			//page limit check
+			//call service
+			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/box_office.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
+			var loader:RottenTomatoesLoader = _getUrlLoader(url);
+			loader.type = BOX_OFFICE_TEMPLATE;
+			loader.load(new URLRequest(url));
+		}
+		
 		public function getTopRentals(pageLimit:int=16, country:String="us"):void
 		{
 			if(!apikey)
@@ -260,32 +312,6 @@ package com.rottentomatoes
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/current_releases.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = CURRENT_RELEASE_DVDS_TEMPLATE;
-			loader.load(new URLRequest(url));
-		}
-		
-		/**
-		 * Retrieves movies currently in theaters.
-		 *  
-		 * @param pageLimit The amount of movies in theaters to show per page.
-		 * @param page The selected page of in theaters movies.
-		 * @param country Provides localized data for the selected country (ISO 3166-1 alpha-2) if available. Otherwise, returns US data.
-		 * 
-		 * @see http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-		 */		
-		public function getInTheaterMovies(pageLimit:int=16, page:int=1, country:String="us"):void
-		{
-			if(!apikey)
-			{
-				if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
-					dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("API Fault", "API Key Missing","You need to set the api key prior to making this call.",0)));
-				return;
-			}
-			//page less than 1 check
-			if(page<1) page = 1;
-			//call service
-			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
-			var loader:RottenTomatoesLoader = _getUrlLoader(url);
-			loader.type = IN_THEATERS_TEMPLATE;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -468,7 +494,7 @@ package com.rottentomatoes
 				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("Unknown",loader.data.toString(), "Service Request Error", loader.httpStatus)));
 				return;
 			}
-			var data:Object = JSON.decode(loader.data);
+			var data:Object = JSON.parse(loader.data);
 			_releaseUrlLoader(loader.url);
 			//check error
 			if(data.error)
@@ -564,6 +590,17 @@ package com.rottentomatoes
 					break;
 				case UPCOMING_DVDS_TEMPLATE:
 					type = RottenTomatoesResultEvent.UPCOMING_DVDS_RESULT;
+					i = -1;
+					titles = data.movies as Array;
+					n = titles.length;
+					results = [];
+					total = data.total;
+					link = data.links.self;
+					while(++i<n)
+						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
+					break;
+				case BOX_OFFICE_TEMPLATE:
+					type = RottenTomatoesResultEvent.BOX_OFFICE_RESULT;
 					i = -1;
 					titles = data.movies as Array;
 					n = titles.length;

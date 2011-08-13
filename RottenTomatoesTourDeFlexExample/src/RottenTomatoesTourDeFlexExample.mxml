@@ -29,6 +29,9 @@
 					case "In Theaters":
 						service.getInTheaterMovies(int(quantityInput.text));
 						break;
+					case "Box Office":
+						service.getBoxOfficeMovies(int(quantityInput.text));
+						break;
 					case "Opening":
 						service.getOpeningMovies(int(quantityInput.text));
 						break;
@@ -125,6 +128,7 @@
 			<s:ArrayList>
 				<fx:Object label="Search"/>
 				<fx:Object label="In Theaters"/>
+				<fx:Object label="Box Office"/>
 				<fx:Object label="Opening"/>
 				<fx:Object label="Upcoming"/>
 				<fx:Object label="Top Rentals"/>
