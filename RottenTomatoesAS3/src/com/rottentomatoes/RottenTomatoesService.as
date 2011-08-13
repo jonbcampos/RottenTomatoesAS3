@@ -176,6 +176,7 @@ package com.rottentomatoes
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/movies.json?apikey="+apikey+"&q="+URLEncoding.encode(term)+"&page_limit="+pageLimit+"&page="+page;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = MOVIE_SEARCH_TEMPLATE;
+			loader.returnType = RottenTomatoesResultEvent.MOVIE_SEARCH_RESULT;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -203,6 +204,7 @@ package com.rottentomatoes
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/opening.json?apikey="+apikey+"&limit="+pageLimit+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = OPENING_MOVIES_TEMPLATE;
+			loader.returnType = RottenTomatoesResultEvent.OPENING_MOVIES_RESULT;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -233,6 +235,7 @@ package com.rottentomatoes
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/upcoming.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = UPCOMING_MOVIES_TEMPLATE;
+			loader.returnType = RottenTomatoesResultEvent.UPCOMING_MOVIES_RESULT;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -263,6 +266,7 @@ package com.rottentomatoes
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = IN_THEATERS_TEMPLATE;
+			loader.returnType = RottenTomatoesResultEvent.IN_THEATERS_RESULT;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -284,6 +288,7 @@ package com.rottentomatoes
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/box_office.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = BOX_OFFICE_TEMPLATE;
+			loader.returnType = RottenTomatoesResultEvent.BOX_OFFICE_RESULT;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -303,6 +308,7 @@ package com.rottentomatoes
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/top_rentals.json?apikey="+apikey+"&page_limit="+pageLimit+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = TOP_RENTALS_TEMPLATE;
+			loader.returnType = RottenTomatoesResultEvent.TOP_RENTALS_RESULT;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -333,6 +339,7 @@ package com.rottentomatoes
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/new_releases.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = NEW_RELEASE_DVDS_TEMPLATE;
+			loader.returnType = RottenTomatoesResultEvent.NEW_RELEASE_DVDS_MOVIES_RESULT;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -354,6 +361,7 @@ package com.rottentomatoes
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/current_releases.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = CURRENT_RELEASE_DVDS_TEMPLATE;
+			loader.returnType = RottenTomatoesResultEvent.CURRENT_RELEASE_DVDS_MOVIES_RESULT;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -375,6 +383,7 @@ package com.rottentomatoes
 			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/upcoming.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = UPCOMING_DVDS_TEMPLATE;
+			loader.returnType = RottenTomatoesResultEvent.UPCOMING_DVDS_RESULT;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -389,6 +398,7 @@ package com.rottentomatoes
 			var url:String = url+"?apikey="+apikey;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = MOVIE_INFO_TEMPLATE;
+			loader.returnType = RottenTomatoesResultEvent.MOVIE_INFO_RESULT;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -408,6 +418,7 @@ package com.rottentomatoes
 			var url:String = url+"?apikey="+apikey;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = MOVIE_CAST_TEMPLATE;
+			loader.returnType = RottenTomatoesResultEvent.MOVIE_CAST_RESULT;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -427,6 +438,7 @@ package com.rottentomatoes
 			var url:String = url+"?apikey="+apikey;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = MOVIE_CLIPS_TEMPLATE;
+			loader.returnType = RottenTomatoesResultEvent.MOVIE_CLIPS_RESULT;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -446,6 +458,7 @@ package com.rottentomatoes
 			var url:String = url+"?apikey="+apikey;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = MOVIE_SIMILARS_TEMPLATE;
+			loader.returnType = RottenTomatoesResultEvent.MOVIE_SIMILARS_RESULT;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -478,6 +491,7 @@ package com.rottentomatoes
 			var url:String = url+"?apikey="+apikey+"&review_type="+type+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = MOVIE_REVIEWS_TEMPLATE;
+			loader.returnType = RottenTomatoesResultEvent.MOVIE_REVIEWS_RESULT;
 			loader.load(new URLRequest(url));
 		}
 		
@@ -533,7 +547,6 @@ package com.rottentomatoes
 		
 		private function _onLoader_CompleteHandler(event:Event):void
 		{
-			var type:String;
 			var loader:RottenTomatoesLoader = event.target as RottenTomatoesLoader;
 			if(loader.data.toString().indexOf("Unrecognized domain")>-1)
 			{
@@ -550,6 +563,7 @@ package com.rottentomatoes
 				return;
 			}
 			//no error
+			var type:String = loader.returnType;
 			var i:int = -1;
 			var n:int = -1;
 			var titles:Array;
@@ -559,95 +573,14 @@ package com.rottentomatoes
 			switch(data.link_template)
 			{
 				case MOVIE_SEARCH_TEMPLATE:
-					type = RottenTomatoesResultEvent.MOVIE_SEARCH_RESULT;
-					i = -1;
-					titles = data.movies as Array;
-					n = titles.length;
-					results = [];
-					total = data.total as int;
-					link = data.links.self;
-					while(++i<n)
-						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
-					break;
 				case IN_THEATERS_TEMPLATE:
-					type = RottenTomatoesResultEvent.IN_THEATERS_RESULT;
-					i = -1;
-					titles = data.movies as Array;
-					n = titles.length;
-					results = [];
-					total = n;
-					link = data.links.self;
-					while(++i<n)
-						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
-					break;
 				case OPENING_MOVIES_TEMPLATE:
-					type = RottenTomatoesResultEvent.OPENING_MOVIES_RESULT;
-					i = -1;
-					titles = data.movies as Array;
-					n = titles.length;
-					results = [];
-					total = n;
-					link = data.links.self;
-					while(++i<n)
-						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
-					break;
 				case UPCOMING_MOVIES_TEMPLATE:
-					type = RottenTomatoesResultEvent.UPCOMING_MOVIES_RESULT;
-					i = -1;
-					titles = data.movies as Array;
-					n = titles.length;
-					results = [];
-					total = data.total;
-					link = data.links.self;
-					while(++i<n)
-						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
-					break;
-				case NEW_RELEASE_DVDS_TEMPLATE:
-					type = RottenTomatoesResultEvent.NEW_RELEASE_DVDS_MOVIES_RESULT;
-					i = -1;
-					titles = data.movies as Array;
-					n = titles.length;
-					results = [];
-					total = data.total;
-					link = data.links.self;
-					while(++i<n)
-						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
-					break;
-				case TOP_RENTALS_TEMPLATE:
-					type = RottenTomatoesResultEvent.TOP_RENTALS_RESULT;
-					i = -1;
-					titles = data.movies as Array;
-					n = titles.length;
-					results = [];
-					total = data.total;
-					link = data.links.self;
-					while(++i<n)
-						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
-					break;
-				case CURRENT_RELEASE_DVDS_TEMPLATE:
-					type = RottenTomatoesResultEvent.CURRENT_RELEASE_DVDS_MOVIES_RESULT;
-					i = -1;
-					titles = data.movies as Array;
-					n = titles.length;
-					results = [];
-					total = data.total;
-					link = data.links.self;
-					while(++i<n)
-						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
-					break;
-				case UPCOMING_DVDS_TEMPLATE:
-					type = RottenTomatoesResultEvent.UPCOMING_DVDS_RESULT;
-					i = -1;
-					titles = data.movies as Array;
-					n = titles.length;
-					results = [];
-					total = data.total;
-					link = data.links.self;
-					while(++i<n)
-						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
-					break;
 				case BOX_OFFICE_TEMPLATE:
-					type = RottenTomatoesResultEvent.BOX_OFFICE_RESULT;
+				case NEW_RELEASE_DVDS_TEMPLATE:
+				case TOP_RENTALS_TEMPLATE:
+				case CURRENT_RELEASE_DVDS_TEMPLATE:
+				case UPCOMING_DVDS_TEMPLATE:
 					i = -1;
 					titles = data.movies as Array;
 					n = titles.length;
@@ -658,7 +591,6 @@ package com.rottentomatoes
 						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
 					break;
 				case MOVIE_REVIEWS_TEMPLATE:
-					type = RottenTomatoesResultEvent.MOVIE_REVIEWS_RESULT;
 					i = -1;
 					titles = data.reviews as Array;
 					n = titles.length;
@@ -672,19 +604,16 @@ package com.rottentomatoes
 					switch(loader.type)
 					{
 						case MOVIE_INFO_TEMPLATE:
-							type = RottenTomatoesResultEvent.MOVIE_INFO_RESULT;
 							total = 1;
 							link = loader.url;
 							results = ConvertUtil.convertObjectToMovie(data);
 							results.selfLink = link;
 							break;
 						case MOVIE_CAST_TEMPLATE:
-							type = RottenTomatoesResultEvent.MOVIE_CAST_RESULT;
 							link = loader.url;
 							results = ConvertUtil.convertArrayToCast(data.cast as Array);
 							break;
 						case MOVIE_SIMILARS_TEMPLATE:
-							type = RottenTomatoesResultEvent.MOVIE_SIMILARS_RESULT;
 							link = loader.url;
 							i = -1;
 							titles = data.movies as Array;
@@ -695,7 +624,6 @@ package com.rottentomatoes
 								results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
 							break;
 						case MOVIE_CLIPS_TEMPLATE:
-							type = RottenTomatoesResultEvent.MOVIE_CLIPS_RESULT;
 							link = loader.url;
 							results = ConvertUtil.convertArrayToClips(data.clips as Array);
 							break;
@@ -804,4 +732,5 @@ class RottenTomatoesLoader extends URLLoader
 	public var url:String;
 	public var type:String;
 	public var httpStatus:int;
+	public var returnType:String;
 }
