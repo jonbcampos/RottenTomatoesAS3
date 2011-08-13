@@ -24,7 +24,7 @@ package com.rottentomatoes.events
 	import flash.events.Event;
 	
 	/**
-	 * Result Event from any of the Netflix Services.
+	 * Result Event from any of the Rotten Tomatoes Services.
 	 * @author jonbcampos
 	 * 
 	 */

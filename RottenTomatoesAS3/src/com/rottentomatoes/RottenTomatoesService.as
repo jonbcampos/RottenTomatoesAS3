@@ -86,7 +86,8 @@ package com.rottentomatoes
 	[Event(name="progress", type="flash.events.ProgressEvent")]
 
 	/**
-	 * 
+	 * Rotten Tomatoes service. Use the methods to call and
+	 * receive typed results.
 	 * @author jonbcampos
 	 * 
 	 */	
@@ -97,9 +98,9 @@ package com.rottentomatoes
 		//  Constructor
 		//
 		//---------------------------------------------------------------------
-		public function RottenTomatoesService(target:IEventDispatcher=null)
+		public function RottenTomatoesService()
 		{
-			super(target);
+			super();
 		}
 		
 		//---------------------------------------------------------------------

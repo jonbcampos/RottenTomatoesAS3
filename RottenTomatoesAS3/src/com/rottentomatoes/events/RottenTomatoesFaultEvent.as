@@ -26,7 +26,7 @@ package com.rottentomatoes.events
 	import flash.events.Event;
 	
 	/**
-	 * Fault Event from any of the Netflix Services.
+	 * Fault Event from any of the Rotten Tomatoes Services.
 	 * @author jonbcampos
 	 * 
 	 */
