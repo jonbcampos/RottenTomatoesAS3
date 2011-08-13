@@ -40,6 +40,14 @@ package com.rottentomatoes
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 	
+	/**
+	 * General result. If you are listening to this result event
+	 * type rather than the specific result event type you will
+	 * still receive the result data, you just won't know which
+	 * speific service function that the handler comes from.
+	 * 
+	 * Depending on your application this may not matter. 
+	 */	
 	[Event(name="result", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
 	
 	[Event(name="movieSearchResult", type="com.rottentomatoes.events.RottenTomatoesResultEvent")]
