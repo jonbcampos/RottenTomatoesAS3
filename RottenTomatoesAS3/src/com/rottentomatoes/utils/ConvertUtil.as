@@ -77,6 +77,28 @@ package com.rottentomatoes.utils
 				movie.criticsScore = value.ratings.critics_score;
 				movie.audienceRating = value.ratings.audience_rating;
 				movie.criticsRating = value.ratings.critics_rating;
+				
+				movie.certifiedFresh = ((movie.audienceScore + movie.criticsScore)/2) >= 75;
+				
+				//audienceIcon
+				if(movie.audienceScore>59)
+				{
+					movie.audienceIcon = "http://images.rottentomatoescdn.com/images/trademark/fresh_45.png"
+					movie.audienceAlternativeIcon = "http://images.rottentomatoescdn.com/images/trademark/popcorn.png";
+				} else {
+					movie.audienceIcon = "http://images.rottentomatoescdn.com/images/trademark/rotten_45.png"
+					movie.audienceAlternativeIcon = "http://images.rottentomatoescdn.com/images/trademark/rotten_45.png";
+				}
+				
+				//criticsIcon
+				if(movie.criticsScore>59)
+				{
+					movie.criticsIcon = "http://images.rottentomatoescdn.com/images/trademark/fresh_45.png"
+					movie.criticsAlternativeIcon = "http://images.rottentomatoescdn.com/images/trademark/popcorn.png";
+				} else {
+					movie.criticsIcon = "http://images.rottentomatoescdn.com/images/trademark/rotten_45.png"
+					movie.criticsAlternativeIcon = "http://images.rottentomatoescdn.com/images/trademark/rotten_45.png";
+				}
 			}
 			if(value.release_dates.dvd)
 				movie.dvdReleaseDate = new Date((value.release_dates.dvd as String).replace(/\-/gi,"/"));

@@ -39,15 +39,23 @@ package com.rottentomatoes.vos
 		public var clipsLink:String;
 		public var similarLink:String;
 		
+		//posters
+		/**
+		 * 180x267. 
+		 */		
 		public var detailedPoster:String;
+		/**
+		 * 1200x1778. 
+		 */		
 		public var originalPoster:String;
+		/**
+		 * 120x178. 
+		 */		
 		public var profilePoster:String;
+		/**
+		 * 61x91. 
+		 */		
 		public var thumbnailPoster:String;
-		
-		public var audienceRating:String;
-		public var audienceScore:int;
-		public var criticsRating:String;
-		public var criticsScore:int;
 		
 		public var dvdReleaseDate:Date;
 		public var theaterReleaseDate:Date;
@@ -59,9 +67,44 @@ package com.rottentomatoes.vos
 		public var title:String;
 		public var year:int;
 		public var studio:String;
+		
+		//audience
+		public var audienceRating:String;
+		public var audienceScore:int;
+		public var audienceIcon:String;
+		public var audienceAlternativeIcon:String;
+		
+		//critics
+		public var criticsRating:String;
+		public var criticsScore:int;
 		public var criticsConsensus:String;
+		public var criticsIcon:String;
+		public var criticsAlternativeIcon:String;
 		
 		//alternate ids
 		public var imdbId:String;
+		
+		//certified fresh
+		public var certifiedFresh:Boolean;
+		/**
+		 * 45x45.
+		 */		
+		public var certifiedFreshTinyIcon:String = "http://images.rottentomatoescdn.com/images/trademark/certified/CertifiedFresh_logo_45.png";
+		/**
+		 * 60x60.
+		 */		
+		public var certifiedFreshSmallIcon:String = "http://images.rottentomatoescdn.com/images/trademark/certified/CertifiedFresh_logo_60.png";
+		/**
+		 * 120x120.
+		 */		
+		public var certifiedFreshMediumIcon:String = "http://images.rottentomatoescdn.com/images/trademark/certified/CertifiedFresh_logo_120.png";
+		/**
+		 * 240x240.
+		 */		
+		public var certifiedFreshLargeIcon:String = "http://images.rottentomatoescdn.com/images/trademark/certified/CertifiedFresh_logo_240.png";
+		/**
+		 * 300x300.
+		 */		
+		public var certifiedFreshHugeIcon:String = "http://images.rottentomatoescdn.com/images/trademark/certified/CertifiedFresh_logo_300.png";
 	}
 }
