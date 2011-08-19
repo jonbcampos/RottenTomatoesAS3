@@ -21,6 +21,7 @@
  * */
 package com.rottentomatoes.vos
 {
+	[RemoteClass(alias="com.rottentomatoes.vos.DirectorVO")]
 	public class DirectorVO
 	{
 		public function DirectorVO()

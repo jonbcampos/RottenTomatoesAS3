@@ -21,6 +21,7 @@
  * */
 package com.rottentomatoes.vos
 {
+	[RemoteClass(alias="com.rottentomatoes.vos.ReviewVO")]
 	public class ReviewVO
 	{
 		public function ReviewVO()

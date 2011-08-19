@@ -21,6 +21,7 @@
  * */
 package com.rottentomatoes.vos
 {
+	[RemoteClass(alias="com.rottentomatoes.vos.CastVO")]
 	public class CastVO
 	{
 		public function CastVO()
