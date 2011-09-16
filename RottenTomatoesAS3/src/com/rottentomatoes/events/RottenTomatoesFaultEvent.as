@@ -43,10 +43,15 @@ package com.rottentomatoes.events
 		 * @return 
 		 * 
 		 */		
-		public function get fault():ServiceFault
-		{
-			return _fault;
-		}
+		public function get fault():ServiceFault{ return _fault; }
+		
+		private var _serviceType:String;
+		/**
+		 * Service Type that caused the fault. 
+		 * @return 
+		 * 
+		 */		
+		public function get serviceType():String { return _serviceType; }
 		
 		/**
 		 * Fault Result Event from Netflix API. 
@@ -54,15 +59,16 @@ package com.rottentomatoes.events
 		 * @param fault
 		 * 
 		 */		
-		public function RottenTomatoesFaultEvent(type:String, fault:ServiceFault = null)
+		public function RottenTomatoesFaultEvent(type:String, fault:ServiceFault = null, serviceType:String = null)
 		{
 			super(type);
 			_fault = fault;
+			_serviceType = serviceType;
 		}
 		
 		override public function clone():Event
 		{
-			return new RottenTomatoesFaultEvent(type, fault);
+			return new RottenTomatoesFaultEvent(type, fault, serviceType);
 		}
 		
 	}

@@ -21,7 +21,6 @@
  * */
 package com.rottentomatoes
 {
-	import com.adobe.serialization.json.JSON;
 	import com.adobe.utils.StringUtil;
 	import com.rottentomatoes.events.RottenTomatoesFaultEvent;
 	import com.rottentomatoes.events.RottenTomatoesResultEvent;
@@ -110,23 +109,23 @@ package com.rottentomatoes
 		//---------------------------------------------------------------------
 		private static const ROTTEN_TOMATOES_BASE_URL:String = "http://api.rottentomatoes.com/api/public/v1.0";
 		
-		private static const MOVIE_SEARCH_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/movies.json?q={search-term}&page_limit={results-per-page}&page={page-number}";
+		public static const MOVIE_SEARCH_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/movies.json?q={search-term}&page_limit={results-per-page}&page={page-number}";
 		
-		private static const OPENING_MOVIES_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/opening.json?limit={num_results}&country={country-code}";
-		private static const UPCOMING_MOVIES_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/upcoming.json?page_limit={results_per_page}&page={page_number}&country={country-code}";
-		private static const IN_THEATERS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/in_theaters.json?page_limit={results_per_page}&page={page_number}&country={country-code}";
-		private static const BOX_OFFICE_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/box_office.json?limit={num-results}&country={country-code}";
+		public static const OPENING_MOVIES_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/opening.json?limit={num_results}&country={country-code}";
+		public static const UPCOMING_MOVIES_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/upcoming.json?page_limit={results_per_page}&page={page_number}&country={country-code}";
+		public static const IN_THEATERS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/in_theaters.json?page_limit={results_per_page}&page={page_number}&country={country-code}";
+		public static const BOX_OFFICE_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/box_office.json?limit={num-results}&country={country-code}";
 		
-		private static const UPCOMING_DVDS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/upcoming.json?page_limit={results-per-page}&page={page-number}&country={country-code}";
-		private static const NEW_RELEASE_DVDS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/new_releases.json?page_limit={results-per-page}&page={page-number}&country={country-code}";
-		private static const CURRENT_RELEASE_DVDS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/current_releases.json?page_limit={results-per-page}&page={page-number}&country={country-code}";
-		private static const TOP_RENTALS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/top_rentals.json?limit={num-results}&country={country-code}";
+		public static const UPCOMING_DVDS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/upcoming.json?page_limit={results-per-page}&page={page-number}&country={country-code}";
+		public static const NEW_RELEASE_DVDS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/new_releases.json?page_limit={results-per-page}&page={page-number}&country={country-code}";
+		public static const CURRENT_RELEASE_DVDS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/current_releases.json?page_limit={results-per-page}&page={page-number}&country={country-code}";
+		public static const TOP_RENTALS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/top_rentals.json?limit={num-results}&country={country-code}";
 		
-		private static const MOVIE_INFO_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/movies/{movie-id}.json";
-		private static const MOVIE_CAST_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/movies/{movie-id}/cast.json";
-		private static const MOVIE_CLIPS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/movies/{movie-id}/clips.json";
-		private static const MOVIE_SIMILARS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/movies/{movie-id}/similar.json";
-		private static const MOVIE_REVIEWS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/movies/{movie-id}/reviews.json?review_type={top_critic|all|dvd}&page_limit={results-per-page}&page={page-number}&country={country-code}";
+		public static const MOVIE_INFO_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/movies/{movie-id}.json";
+		public static const MOVIE_CAST_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/movies/{movie-id}/cast.json";
+		public static const MOVIE_CLIPS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/movies/{movie-id}/clips.json";
+		public static const MOVIE_SIMILARS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/movies/{movie-id}/similar.json";
+		public static const MOVIE_REVIEWS_TEMPLATE:String = ROTTEN_TOMATOES_BASE_URL+"/movies/{movie-id}/reviews.json?review_type={top_critic|all|dvd}&page_limit={results-per-page}&page={page-number}&country={country-code}";
 		
 		//---------------------------------------------------------------------
 		//
@@ -551,7 +550,7 @@ package com.rottentomatoes
 			_releaseUrlLoader(loader.url);
 			
 			if(hasEventListener(RottenTomatoesFaultEvent.FAULT))
-				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault(event.errorID.toFixed(0),event.type, event.text, loader.httpStatus)));
+				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault(event.errorID.toFixed(0),event.type, event.text, loader.httpStatus), loader.type));
 		}
 		
 		private function _onLoader_CompleteHandler(event:Event):void
@@ -562,8 +561,8 @@ package com.rottentomatoes
 				dispatchEvent(new RottenTomatoesFaultEvent(RottenTomatoesFaultEvent.FAULT, new ServiceFault("Unknown",loader.data.toString(), "Service Request Error", loader.httpStatus)));
 				return;
 			}
-			//var data:Object = JSON.parse(loader.data);
-			var data:Object = JSON.decode(loader.data);
+			var data:Object = JSON.parse(loader.data);
+			//var data:Object = JSON.decode(loader.data);
 			_releaseUrlLoader(loader.url);
 			//check error
 			if(data.error)
@@ -594,7 +593,7 @@ package com.rottentomatoes
 					titles = data.movies as Array;
 					n = titles.length;
 					results = [];
-					total = data.total;
+					total = (data.hasOwnProperty("total"))?data.total:n;
 					link = data.links.self;
 					while(++i<n)
 						results.push( ConvertUtil.convertObjectToMovie(data.movies[i]) );
@@ -604,7 +603,7 @@ package com.rottentomatoes
 					titles = data.reviews as Array;
 					n = titles.length;
 					results = [];
-					total = data.total;
+					total = (data.hasOwnProperty("total"))?data.total:n;
 					link = data.links.self;
 					while(++i<n)
 						results.push( ConvertUtil.convertObjectToReviews(data.reviews[i]) );
