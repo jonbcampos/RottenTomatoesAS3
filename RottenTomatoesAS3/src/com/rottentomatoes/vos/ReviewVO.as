@@ -33,6 +33,59 @@ package com.rottentomatoes.vos
 		public var reviewLink:String;
 		public var publication:String;
 		public var quote:String;
-		public var originalScore:String;
+		
+		private var _originalScore:String;
+		public function get originalScore():String
+		{
+			return _originalScore;
+		}
+		
+		public function set originalScore(value:String):void
+		{
+			_originalScore = value;
+			
+			if(originalScore)
+			{
+				if(originalScore.indexOf("/")>-1)
+				{
+					//math
+					var numbers:Array = originalScore.split("/");
+					if(numbers.length==2)
+					{
+						if(isNaN(numbers[0]) == false && isNaN(numbers[1]) == false)
+						{
+							var perc:Number = Number(numbers[0])/Number(numbers[1]);
+							if(perc>0.59)
+							{
+								icon = "http://images.rottentomatoescdn.com/images/trademark/fresh_45.png";
+								alternativeIcon = "http://images.rottentomatoescdn.com/images/trademark/popcorn.png";
+							} else {
+								icon = alternativeIcon = "http://images.rottentomatoescdn.com/images/trademark/rotten_45.png";
+							}
+						}
+					}
+				} else {
+					var value:String = originalScore.replace("+","");
+					value = value.replace("-","");
+					value = value.toLowerCase();
+					switch(value)
+					{
+						case "a":
+						case "b":
+							icon = "http://images.rottentomatoescdn.com/images/trademark/fresh_45.png";
+							alternativeIcon = "http://images.rottentomatoescdn.com/images/trademark/popcorn.png";
+							break;
+						case "c":
+						case "d":
+						case "f":
+							icon = alternativeIcon = "http://images.rottentomatoescdn.com/images/trademark/rotten_45.png";
+							break;
+					}
+				}
+			}
+		}
+		
+		public var icon:String;
+		public var alternativeIcon:String;
 	}
 }
