@@ -293,7 +293,7 @@ package com.rottentomatoes
 			//country check
 			if(!country) country = "us";
 			//call service
-			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/box_office.json?apikey="+apikey+"&page_limit="+pageLimit+"&page="+page+"&country="+country;
+			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/movies/box_office.json?apikey="+apikey+"&limit="+pageLimit+"&page="+page+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = BOX_OFFICE_TEMPLATE;
 			loader.returnType = RottenTomatoesResultEvent.BOX_OFFICE_RESULT;
@@ -313,7 +313,7 @@ package com.rottentomatoes
 			//country check
 			if(!country) country = "us";
 			//service call
-			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/top_rentals.json?apikey="+apikey+"&page_limit="+pageLimit+"&country="+country;
+			var url:String = ROTTEN_TOMATOES_BASE_URL+"/lists/dvds/top_rentals.json?apikey="+apikey+"&limit="+pageLimit+"&country="+country;
 			var loader:RottenTomatoesLoader = _getUrlLoader(url);
 			loader.type = TOP_RENTALS_TEMPLATE;
 			loader.returnType = RottenTomatoesResultEvent.TOP_RENTALS_RESULT;
