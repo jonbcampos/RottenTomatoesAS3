@@ -69,17 +69,21 @@ package com.rottentomatoes.events
 		private var _total:int;
 		public function get total():int { return _total; }
 		
-		public function RottenTomatoesResultEvent(type:String, result:Object = null, url:String = null, total:int=0)
+		private var _serviceType:String;
+		public function get serviceType():String { return _serviceType; }
+		
+		public function RottenTomatoesResultEvent(type:String, result:Object = null, url:String = null, total:int=0, serviceType:String=null)
 		{
 			super(type);
 			_result = result;
 			_url = url;
 			_total = total;
+			_serviceType = serviceType;
 		}
 		
 		override public function clone():Event
 		{
-			return new RottenTomatoesResultEvent(type, result, url, total);
+			return new RottenTomatoesResultEvent(type, result, url, total, serviceType);
 		}
 	}
 }

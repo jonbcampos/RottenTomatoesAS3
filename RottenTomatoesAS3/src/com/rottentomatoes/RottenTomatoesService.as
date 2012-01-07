@@ -571,7 +571,6 @@ package com.rottentomatoes
 				return;
 			}
 			//no error
-			var type:String = loader.returnType;
 			var i:int = -1;
 			var n:int = -1;
 			var titles:Array;
@@ -654,13 +653,13 @@ package com.rottentomatoes
 			//dispatch result
 			//only dispatch if we
 			//are listening for it
-			if(hasEventListener(type))
-				dispatchEvent(new RottenTomatoesResultEvent(type, results, link, total));
+			if(hasEventListener(loader.returnType))
+				dispatchEvent(new RottenTomatoesResultEvent(loader.returnType, results, link, total));
 			//dispatch the generic "result"
 			//event if someone doesn't care
 			//for the exact service type
 			if(hasEventListener(RottenTomatoesResultEvent.RESULT))
-				dispatchEvent(new RottenTomatoesResultEvent(RottenTomatoesResultEvent.RESULT, results, link, total));
+				dispatchEvent(new RottenTomatoesResultEvent(RottenTomatoesResultEvent.RESULT, results, link, total, loader.type));
 		}
 		
 		private function _onLoader_SecurityHandler(event:SecurityErrorEvent):void
